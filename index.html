@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>はじめてのAI教科書</title>
+  <title>はじめての生成AI</title>
   <meta name="description" content="初心者向けに生成AIの基本を学べるWeb教科書（試作版）">
+  <meta name="theme-color" content="#000000">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
-    <a href="#/" class="site-title">はじめてのAI教科書</a>
-    <span class="badge">試作版 v0.1</span>
+    <a href="#/" class="site-title">はじめての生成AI</a>
+    <a href="#/" class="icon-btn" aria-label="ホームに戻る">
+      <!-- 本のアイコン -->
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 6.5C10.5 5.3 8.3 4.8 4 5v13c4.3-.2 6.5.3 8 1.5 1.5-1.2 3.7-1.7 8-1.5V5c-4.3-.2-6.5.3-8 1.5z"/>
+        <path d="M12 6.5v13"/>
+      </svg>
+    </a>
   </header>
 
   <!-- 画面の中身は js/app.js がここに描画します -->
   <main id="app" class="container" tabindex="-1"></main>
 
   <footer class="site-footer">
-    <p>学習状況はこのブラウザ内にのみ保存されます。</p>
+    <p>試作版 v0.1 ・ 学習状況はこのブラウザ内にのみ保存されます。</p>
   </footer>
 
   <!-- 教材データ（差し替え用） -->

@@ -68,6 +68,21 @@
     return Object.keys(chapterState(chapter.id).answers).length;
   }
 
+  // 飾り用のアイコン（固定のSVG文字列だけを使う）
+  var ICONS = {
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    brain: '<path d="M12 5.5a3 3 0 0 0-5.6-1.4A3 3 0 0 0 4 8.5a3 3 0 0 0 .5 5.4A3 3 0 0 0 8 19a3 3 0 0 0 4-.6V5.5z"/>' +
+      '<path d="M12 5.5a3 3 0 0 1 5.6-1.4A3 3 0 0 1 20 8.5a3 3 0 0 1-.5 5.4A3 3 0 0 1 16 19a3 3 0 0 1-4-.6"/>',
+    glossary: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9.5 13l2.5-6 2.5 6M10.3 11h3.4M9 17h6"/>'
+  };
+
+  function icon(name) {
+    var span = el("span", { class: "icon icon-" + name, "aria-hidden": "true" });
+    span.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+      'stroke-linecap="round" stroke-linejoin="round">' + ICONS[name] + "</svg>";
+    return span;
+  }
+
   function draftNotice() {
     return el("p", {
       class: "notice",
@@ -91,21 +106,42 @@
 
       return el("li", null, [
         el("a", { class: "chapter-card", href: "#/chapter/" + c.id }, [
-          el("span", { class: "chapter-number", text: "第" + c.number + "章" }),
-          el("span", { class: "chapter-title", text: c.title }),
+          el("span", { class: "chapter-heading" }, [
+            el("span", { class: "chapter-number", text: "第" + c.number + "章" }),
+            el("span", { class: "chapter-title", text: c.title })
+          ]),
           el("span", { class: "chapter-summary", text: c.summary }),
-          el("span", { class: "chapter-meta" }, [status, quizInfo])
+          el("span", { class: "chapter-meta" }, [
+            c.minutes ? el("span", { class: "pill", text: "約" + c.minutes + "分" }) : null,
+            status,
+            quizInfo,
+            icon("arrow")
+          ])
         ])
       ]);
     }));
 
+    // 理解度クイズは先頭の章のクイズへ。用語集はまだダミー表示
+    var shortcuts = el("div", { class: "shortcut-grid" }, [
+      el("a", { class: "shortcut-card", href: "#/chapter/" + chapters[0].id + "/quiz" }, [
+        icon("brain"),
+        el("span", { class: "shortcut-label", text: "理解度クイズ" })
+      ]),
+      el("div", { class: "shortcut-card is-disabled", "aria-disabled": "true" }, [
+        icon("glossary"),
+        el("span", { class: "shortcut-label", text: "AI用語集" }),
+        el("span", { class: "shortcut-note", text: "準備中" })
+      ])
+    ]);
+
     app.replaceChildren(
       el("section", { class: "intro" }, [
-        el("h1", { text: "生成AIの基本を、少しずつ。" }),
-        el("p", { text: "1章ずつ読んで、最後のクイズで理解を確かめましょう。" })
+        el("h1", { text: "AIを知る。使う。考える。" }),
+        el("p", { text: "初心者のためのAI学習ガイド" })
       ]),
-      el("p", { class: "progress-summary", text: "学習済み " + doneCount + " / " + chapters.length + " 章" }),
       list,
+      shortcuts,
+      el("p", { class: "progress-summary", text: "学習済み " + doneCount + " / " + chapters.length + " 章" }),
       el("button", {
         type: "button",
         class: "btn btn-ghost",
@@ -223,17 +259,20 @@
   // ---------- 画面切り替え ----------
 
   function route() {
-    var match = location.hash.match(/^#\/chapter\/([\w-]+)/);
+    var match = location.hash.match(/^#\/chapter\/([\w-]+)(\/quiz)?/);
     var chapter = match && findChapter(match[1]);
     if (chapter) {
-      document.title = chapter.title + "｜はじめてのAI教科書";
+      document.title = chapter.title + "｜はじめての生成AI";
       renderChapter(chapter);
     } else {
-      document.title = "はじめてのAI教科書";
+      document.title = "はじめての生成AI";
       renderHome();
     }
-    window.scrollTo(0, 0);
     app.focus({ preventScroll: true });
+    // #/chapter/xxx/quiz のときはクイズの位置から表示する
+    var quiz = match && match[2] && document.getElementById("quiz");
+    if (quiz) quiz.scrollIntoView();
+    else window.scrollTo(0, 0);
   }
 
   window.addEventListener("hashchange", route);

@@ -12,6 +12,7 @@
  *   number    : 章番号
  *   title     : 章タイトル
  *   summary   : ホーム画面に出す一行説明
+ *   minutes   : ホーム画面に出す目安の学習時間（分）
  *   draft     : true のとき「仮データ」の表示が出る
  *   sections  : 本文。heading（見出し）と paragraphs（段落の配列）
  *   quiz      : question（問題文）, choices（選択肢）, answer（正解の番号。0始まり）,
@@ -22,8 +23,9 @@ window.TEXTBOOK = {
     {
       id: "llm",
       number: 1,
-      title: "LLMとは何か",
-      summary: "ChatGPTなどの土台になっている「大規模言語モデル」の基本を知る",
+      title: "LLMって何？",
+      summary: "AIが文章を作る仕組みを、身近な例から学びます。",
+      minutes: 5,
       draft: true,
       sections: [
         {
